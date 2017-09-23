@@ -41,7 +41,6 @@ get '/handle-disability' do
   redirect '/medical' if params['Digits'] == '1'
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("You must be at least 60 years of age or presently disabled to use this service. Goodbye.")
-    r.hangup
   end.to_s
 end
 
@@ -65,19 +64,17 @@ get '/seabury' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("
       Transferring you to Seabury Connector.
-      In the future, you can call Seabury Connector directly at 202 727 7771.
+      In the future, you can call Seabury Connector directly at 2 0 2, 7 2 7, 7 7 7 1.
       I will repeat that number now.
-      202 727 7771.
+      2 0 2, 7 2 7, 7 7 7 1.
       Transferring you now.
     ")
     r.dial(number: '202-727-7771')
-    r.hangup
   end.to_s
 end
 
 get '/purpose' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("This is the end of the line.")
-    r.hangup
   end.to_s
 end
