@@ -7,29 +7,29 @@ get '/enter' do
       Welcome to the D.C. Office on Aging transportation hotline.
       We will help you get a ride to where you need to go.
     ")
-    r.redirect('age', method: 'post')
+    r.redirect('/age', method: 'post')
   end.to_s
 end
 
 get '/age' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("What is your age?")
-    r.gather(action: 'handle-age', method: 'get') do |g|
+    r.gather(action: '/handle-age', method: 'get') do |g|
       g.say('Enter your age using the numbers on your telephone, followed by the pound sign.')
     end
   end.to_s
 end
 
 get '/handle-age' do
-  redirect 'age' if !params.has_key?('Digits')
-  redirect 'disability' if params['Digits'] < 60
-  redirect 'medical'
+  redirect '/age' if !params.has_key?('Digits')
+  redirect '/disability' if params['Digits'] < 60
+  redirect '/medical'
 end
 
 get '/disability' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("Do you have a disability?")
-    r.gather(:numDigits => '1', :action => 'handle-medical', :method => 'get') do |g|
+    r.gather(:numDigits => '1', :action => '/handle-disability', :method => 'get') do |g|
       g.say('Press 1 for yes.')
       g.say('Press 2 for no.')
     end
@@ -37,8 +37,8 @@ get '/disability' do
 end
 
 get '/handle-disability' do
-  redirect 'disability' if !params.has_key?('Digits')
-  redirect 'medical' if params['Digits'] == 1
+  redirect '/disability' if !params.has_key?('Digits')
+  redirect '/medical' if params['Digits'] == 1
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("You must be at least 60 years of age or presently disabled to use this service. Goodbye.")
     r.hangup
@@ -48,7 +48,7 @@ end
 get '/medical' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("Is this ride for a medical appointment?")
-    r.gather(:numDigits => '1', :action => 'handle-medical', :method => 'get') do |g|
+    r.gather(:numDigits => '1', :action => '/handle-medical', :method => 'get') do |g|
       g.say('Press 1 for yes.')
       g.say('Press 2 for no.')
     end
@@ -56,9 +56,9 @@ get '/medical' do
 end
 
 get '/handle-medical' do
-  redirect 'medical' if !params.has_key?('Digits')
-  redirect 'seabury' if params['Digits'] == 1
-  redirect 'purpose' if params['Digits'] == 2
+  redirect '/medical' if !params.has_key?('Digits')
+  redirect '/seabury' if params['Digits'] == 1
+  redirect '/purpose' if params['Digits'] == 2
 end
 
 get '/seabury' do
