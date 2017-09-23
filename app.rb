@@ -69,7 +69,9 @@ get '/seabury' do
       2 0 2, 7 2 7, 7 7 7 1.
       Transferring you now.
     ")
-    r.dial(number: '202-727-7771')
+    r.dial do |d|
+      d.number('2027277771')
+    end
   end.to_s
 end
 
