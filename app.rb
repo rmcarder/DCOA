@@ -7,7 +7,7 @@ get '/enter' do
       Welcome to the D.C. Office on Aging transportation hotline.
       We will help you get a ride to where you need to go.
     ")
-    r.redirect('/age', method: 'post')
+    r.redirect('/age', method: 'get')
   end.to_s
 end
 
