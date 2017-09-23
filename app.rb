@@ -22,7 +22,7 @@ end
 
 get '/handle-age' do
   redirect '/age' if !params.has_key?('Digits')
-  redirect '/disability' if params['Digits'] < 60
+  redirect '/disability' if params['Digits'].to_i < 60
   redirect '/medical'
 end
 
@@ -38,7 +38,7 @@ end
 
 get '/handle-disability' do
   redirect '/disability' if !params.has_key?('Digits')
-  redirect '/medical' if params['Digits'] == 1
+  redirect '/medical' if params['Digits'] == '1'
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("You must be at least 60 years of age or presently disabled to use this service. Goodbye.")
     r.hangup
@@ -57,8 +57,8 @@ end
 
 get '/handle-medical' do
   redirect '/medical' if !params.has_key?('Digits')
-  redirect '/seabury' if params['Digits'] == 1
-  redirect '/purpose' if params['Digits'] == 2
+  redirect '/seabury' if params['Digits'] == '1'
+  redirect '/purpose' if params['Digits'] == '2'
 end
 
 get '/seabury' do
@@ -70,9 +70,7 @@ get '/seabury' do
       202 727 7771.
       Transferring you now.
     ")
-    r.dial do |dial|
-      dial.number('202-727-7771')
-    end
+    r.dial(number: '202-727-7771')
     r.hangup
   end.to_s
 end
