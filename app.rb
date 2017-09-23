@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'twilio-ruby'
 
-get 'enter' do
+get '/enter' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("
       Welcome to the D.C. Office on Aging transportation hotline.
@@ -11,7 +11,7 @@ get 'enter' do
   end.to_s
 end
 
-get 'age' do
+get '/age' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("What is your age?")
     r.gather(action: 'handle-age', method: 'get') do |g|
@@ -20,13 +20,13 @@ get 'age' do
   end.to_s
 end
 
-get 'handle-age' do
+get '/handle-age' do
   redirect 'age' if !params.has_key?('Digits')
   redirect 'disability' if params['Digits'] < 60
   redirect 'medical'
 end
 
-get 'disability' do
+get '/disability' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("Do you have a disability?")
     r.gather(:numDigits => '1', :action => 'handle-medical', :method => 'get') do |g|
@@ -36,7 +36,7 @@ get 'disability' do
   end.to_s
 end
 
-get 'handle-disability' do
+get '/handle-disability' do
   redirect 'disability' if !params.has_key?('Digits')
   redirect 'medical' if params['Digits'] == 1
   Twilio::TwiML::VoiceResponse.new do |r|
@@ -45,7 +45,7 @@ get 'handle-disability' do
   end.to_s
 end
 
-get 'medical' do
+get '/medical' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("Is this ride for a medical appointment?")
     r.gather(:numDigits => '1', :action => 'handle-medical', :method => 'get') do |g|
@@ -55,13 +55,13 @@ get 'medical' do
   end.to_s
 end
 
-get 'handle-medical' do
+get '/handle-medical' do
   redirect 'medical' if !params.has_key?('Digits')
   redirect 'seabury' if params['Digits'] == 1
   redirect 'purpose' if params['Digits'] == 2
 end
 
-get 'seabury' do
+get '/seabury' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("
       Transferring you to Seabury Connector.
@@ -77,7 +77,7 @@ get 'seabury' do
   end.to_s
 end
 
-get 'purpose' do
+get '/purpose' do
   Twilio::TwiML::VoiceResponse.new do |r|
     r.say("This is the end of the line.")
     r.hangup
